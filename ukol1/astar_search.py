@@ -5,6 +5,8 @@ def print_list(liist):
         print(item, end=" ")
     print()
 
+# enques the coordinate into frontier based on the heuretic of distance from
+# the start and the manhattan distance from the goal
 def enque(frontier, coord, goal, dist_table):
     coord_heuretic = coord.manhattan_distance(goal)
     isInserted = False
@@ -16,12 +18,27 @@ def enque(frontier, coord, goal, dist_table):
             break
     if not isInserted:
         frontier.append(coord)
+
+# move the coordinate in the frontier based on its heuretic
 def jump_que(frontier, coord, goal, dist_table):
     frontier.remove(coord)
-    enque(frontier, coord, goal, dist_table)
+    enque(frontier, coord, goal, dist_table)\
+# initializes distances of the neighbours of the starting position
+# that means one
+def initialize_dist_table(dist_table, neighbours):
+    for neighbour in neighbours:
+        dist_table[str(neighbour)] = 1
+# initializes the frontier, it is expected that all coordinates
+# have the same distance from the start, that is now 1
+def initialize_frontier(frontier, neighbours):
+    frontier.extend(neighbours)
+def initialize_prev_table(prev_table, neighbours, start):
+    for i in neighbours:
+        prev_table[str(i)] = start
 def astar_search(new_map):
     if new_map.case_endIsStart():
         return [new_map.get_start()]
+    #setting up variables before the actual algorithm starts    
     progress_map = new_map.copy()
     goal = new_map.get_end()
     prev_table = {}
@@ -30,15 +47,12 @@ def astar_search(new_map):
     current_position.set_current_map(new_map)
     frontier = []
     neighbours = current_position.get_neigbours()
-    for neighbour in neighbours:
-        dist_table[str(neighbour)] = 1
-        enque(frontier, neighbour, goal, dist_table)
+    initialize_frontier(frontier, neighbours)
+    initialize_dist_table(dist_table, neighbours)
     closed = []
     closed.append(current_position)
     prev_table[str(current_position)] = None
-    
-    for i in frontier:
-        prev_table[str(i)] = current_position
+    initialize_prev_table(prev_table, neighbours, current_position)
     
     solution = []
     
