@@ -30,8 +30,9 @@ def initialize_dist_table(dist_table, neighbours):
         dist_table[str(neighbour)] = 1
 # initializes the frontier, it is expected that all coordinates
 # have the same distance from the start, that is now 1
-def initialize_frontier(frontier, neighbours):
-    frontier.extend(neighbours)
+def initialize_frontier(frontier, neighbours, goal, dist_table):
+    for i in neighbours:
+        enque(frontier, i, goal, dist_table)
 def initialize_prev_table(prev_table, neighbours, start):
     for i in neighbours:
         prev_table[str(i)] = start
@@ -47,8 +48,8 @@ def astar_search(new_map):
     current_position.set_current_map(new_map)
     frontier = []
     neighbours = current_position.get_neigbours()
-    initialize_frontier(frontier, neighbours)
     initialize_dist_table(dist_table, neighbours)
+    initialize_frontier(frontier, neighbours, goal, dist_table)
     closed = []
     closed.append(current_position)
     prev_table[str(current_position)] = None
