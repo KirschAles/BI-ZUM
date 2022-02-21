@@ -127,7 +127,7 @@ def get_raw_input():
     for line in lines:
         line.splitlines()
     return lines
-def reconstruct_path(prev_table, x):
+def reconstruct_path_recursive(prev_table, x):
     if prev_table[str(x)] is None:
         a = [x]
         return a
@@ -135,6 +135,15 @@ def reconstruct_path(prev_table, x):
     b = reconstruct_path(prev_table, prev_table[str(x)])
     b.append(x)
     return b
+def reconstruct_path(prev_table, x):
+    path = []
+    coord = x
+    while not prev_table[str(coord)] is None:
+        path.insert(0, coord)
+        coord = prev_table[str(coord)]
+    path.insert(0, coord)
+    return path
+        
 def load_map():
     return Map()
 def divide_input(raw_input):
